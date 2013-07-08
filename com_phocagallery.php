@@ -34,8 +34,8 @@ final class xmap_com_phocagallery {
 		$params['category_priority'] = $priority;
 		$params['category_changefreq'] = $changefreq;
 		
-		$priority = self::getParam($params, 'download_priority', $parent->priority);
-		$changefreq = self::getParam($params, 'download_changefreq', $parent->changefreq);
+		$priority = self::getParam($params, 'image_priority', $parent->priority);
+		$changefreq = self::getParam($params, 'image_changefreq', $parent->changefreq);
 		
 		if($priority == -1) {
 			$priority = $parent->priority;
@@ -45,8 +45,8 @@ final class xmap_com_phocagallery {
 			$changefreq = $parent->changefreq;
 		}
 		
-		$params['download_priority'] = $priority;
-		$params['download_changefreq'] = $changefreq;
+		$params['image_priority'] = $priority;
+		$params['image_changefreq'] = $changefreq;
 		
 		self::getCategoryTree($xmap, $parent, $params, 0);
 		return true;
@@ -118,8 +118,8 @@ final class xmap_com_phocagallery {
 			$node->name = $row->title;
 			$node->uid = $parent->uid . '_' . $row->id;
 			$node->browserNav = $parent->browserNav;
-			$node->priority = $params['download_priority'];
-			$node->changefreq = $params['download_changefreq'];
+			$node->priority = $params['image_priority'];
+			$node->changefreq = $params['image_changefreq'];
 			$node->link = PhocaGalleryRoute::getImageRoute($row->id, $catid);
 			
 			$xmap->printNode($node);
