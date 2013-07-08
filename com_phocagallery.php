@@ -9,11 +9,9 @@
  
 defined('_JEXEC') or die;
 
+require_once JPATH_ADMINISTRATOR . '/components/com_phocagallery/libraries/phocagallery/path/route.php';
+
 final class xmap_com_phocagallery {
-	
-	public function __construct() {
-		require_once JPATH_ADMINISTRATOR . '/components/com_phocagallery/libraries/phocagallery/path/route.php';
-	}
 	
 	public function getTree(&$xmap, &$parent, &$params) {
 		$include_images = self::getParam($params, 'include_images', 1);
