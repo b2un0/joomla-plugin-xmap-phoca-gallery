@@ -18,6 +18,12 @@ final class xmap_com_phocagallery {
 		$include_images = ($include_images == 1 || ($include_images == 2 && $xmap->view == 'xml') || ($include_images == 3 && $xmap->view == 'html'));
 		$params['include_images'] = $include_images;
 		
+		$show_unauth = JArrayHelper::getValue($params, 'show_unauth');
+		$show_unauth = ($show_unauth == 1 || ( $show_unauth == 2 && $xmap->view == 'xml') || ( $show_unauth == 3 && $xmap->view == 'html'));
+		$params['show_unauth'] = $show_unauth;
+		
+		$params['groups'] = implode(',', JFactory::getUser()->getAuthorisedViewLevels());
+		
 		$priority = self::getParam($params, 'category_priority', $parent->priority);
 		$changefreq = self::getParam($params, 'category_changefreq', $parent->changefreq);
 		
@@ -59,6 +65,10 @@ final class xmap_com_phocagallery {
 				->where('parent_id = ' . $db->quote($parent_id))
 				->where('published = 1')
 				->order('ordering');
+		
+		if (!$params['show_unauth']) {
+			$query->where('access IN(' . $params['groups'] . ')');
+		}
 		
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
