@@ -14,7 +14,7 @@ require_once JPATH_ADMINISTRATOR . '/components/com_phocagallery/libraries/phoca
 final class xmap_com_phocagallery {
 	
 	public function getTree(&$xmap, &$parent, &$params) {
-		$include_images = self::getParam($params, 'include_images', 1);
+		$include_images = JArrayHelper::getValue($params, 'include_images', 1);
 		$include_images = ($include_images == 1 || ($include_images == 2 && $xmap->view == 'xml') || ($include_images == 3 && $xmap->view == 'html'));
 		$params['include_images'] = $include_images;
 		
@@ -24,8 +24,8 @@ final class xmap_com_phocagallery {
 		
 		$params['groups'] = implode(',', JFactory::getUser()->getAuthorisedViewLevels());
 		
-		$priority = self::getParam($params, 'category_priority', $parent->priority);
-		$changefreq = self::getParam($params, 'category_changefreq', $parent->changefreq);
+		$priority = JArrayHelper::getValue($params, 'category_priority', $parent->priority);
+		$changefreq = JArrayHelper::getValue($params, 'category_changefreq', $parent->changefreq);
 		
 		if($priority == -1) {
 			$priority = $parent->priority;
@@ -38,8 +38,8 @@ final class xmap_com_phocagallery {
 		$params['category_priority'] = $priority;
 		$params['category_changefreq'] = $changefreq;
 		
-		$priority = self::getParam($params, 'image_priority', $parent->priority);
-		$changefreq = self::getParam($params, 'image_changefreq', $parent->changefreq);
+		$priority = JArrayHelper::getValue($params, 'image_priority', $parent->priority);
+		$changefreq = JArrayHelper::getValue($params, 'image_changefreq', $parent->changefreq);
 		
 		if($priority == -1) {
 			$priority = $parent->priority;
@@ -97,7 +97,6 @@ final class xmap_com_phocagallery {
 				}
 			}
 		}
-		
 		$xmap->changeLevel(-1);
 	}
 
@@ -134,9 +133,5 @@ final class xmap_com_phocagallery {
 		}
 		
 		$xmap->changeLevel(-1);
-	}
-	
-	private static function getParam($arr, $name, $default) {
-		return JArrayHelper::getValue($arr, $name, $default);
 	}
 }
