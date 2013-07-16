@@ -97,6 +97,7 @@ final class xmap_com_phocagallery {
 				}
 			}
 		}
+		
 		$xmap->changeLevel(-1);
 	}
 
@@ -104,7 +105,7 @@ final class xmap_com_phocagallery {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-				->select(array('id', 'title', 'date'))
+				->select(array('id', 'title'))
 				->from('#__phocagallery')
 				->where('catid = ' . $db->Quote($catid))
 				->where('published = 1')
