@@ -13,16 +13,16 @@ require_once JPATH_ADMINISTRATOR . '/components/com_phocagallery/libraries/phoca
 
 final class xmap_com_phocagallery {
 	
-	private static $views = array('categories', 'category', 'file');
+	private static $views = array('categories', 'category');
 	
 	public static function getTree(&$xmap, &$parent, &$params) {
 		$uri = new JUri($parent->link);
 		
-		/*if(!in_array($uri->getVar('view'), self::$views)) {
-			return false;
-		}*/
+		if(!in_array($uri->getVar('view'), self::$views)) {
+			return;
+		}
 		
-		$include_images = JArrayHelper::getValue($params, 'include_images', 1);
+		$include_images = JArrayHelper::getValue($params, 'include_images');
 		$include_images = ($include_images == 1 || ($include_images == 2 && $xmap->view == 'xml') || ($include_images == 3 && $xmap->view == 'html'));
 		$params['include_images'] = $include_images;
 		
@@ -66,15 +66,9 @@ final class xmap_com_phocagallery {
 			break;
 			
 			case 'category':
-				self::getCategoryTree($xmap, $parent, $params, $uri->getVar('id', 0));
+				self::getImages($xmap, $parent, $params, $uri->getVar('id'));
 			break;
-			
-			case 'file':
-				self::getImage($xmap, $parent, $params, $uri->getVar('id', 0));
-			break;
-			
 		}
-		return true;
 	}
 	
 	private static function getCategoryTree(&$xmap, &$parent, &$params, $parent_id) {
@@ -122,38 +116,6 @@ final class xmap_com_phocagallery {
 		$xmap->changeLevel(-1);
 	}
 	
-	private static function getImage(&$xmap, &$parent, &$params, $id) {
-		$db = JFactory::getDbo();
-	
-		$query = $db->getQuery(true)
-		->select(array('id', 'title', 'catid'))
-		->from('#__phocagallery')
-		->where('id = ' . $db->Quote($id))
-		->where('published = 1');
-	
-		$db->setQuery($query);
-		$row = $db->loadObject();
-	
-		if(empty($row)) {
-			return;
-		}
-	
-		$xmap->changeLevel(1);
-	
-		$node = new stdclass;
-		$node->id = $parent->id;
-		$node->name = $row->title;
-		$node->uid = $parent->uid . '_' . $row->id;
-		$node->browserNav = $parent->browserNav;
-		$node->priority = $params['image_priority'];
-		$node->changefreq = $params['image_changefreq'];
-		$node->link = PhocaGalleryRoute::getImageRoute($row->id, $row->catid);
-			
-		$xmap->printNode($node);
-	
-		$xmap->changeLevel(-1);
-	}
-
 	private static function getImages(&$xmap, &$parent, &$params, $catid) {
 		$db = JFactory::getDbo();
 		
