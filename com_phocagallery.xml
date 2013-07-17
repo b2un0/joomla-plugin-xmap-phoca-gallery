@@ -83,6 +83,6 @@
         </fields>
     </config>
 	<updateservers>
-		<server type="extension" priority="1" name="Xmap - Phoca Gallery">http://www.z-index.net/en/joomla/xmap-phoca-gallery/updatestream.xml</server>
+		<server type="extension" priority="1" name="Xmap - Phoca Gallery">http://www.z-index.net/en/joomla-xmap-plugins/xmap-phoca-gallery/updatestream.xml</server>
 	</updateservers>
 </extension>
