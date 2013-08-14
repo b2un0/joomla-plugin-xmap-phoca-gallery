@@ -15,7 +15,7 @@ final class xmap_com_phocagallery {
 	
 	private static $views = array('categories', 'category');
 	
-	public static function getTree(&$xmap, &$parent, &$params) {
+	public static function getTree(XmapXmlDisplayer &$xmap, stdClass &$parent, array &$params) {
 		$uri = new JUri($parent->link);
 		
 		if(!in_array($uri->getVar('view'), self::$views)) {
@@ -71,7 +71,7 @@ final class xmap_com_phocagallery {
 		}
 	}
 	
-	private static function getCategoryTree(&$xmap, &$parent, &$params, $parent_id) {
+	private static function getCategoryTree(XmapXmlDisplayer &$xmap, stdClass &$parent, array &$params, $parent_id) {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
@@ -116,7 +116,7 @@ final class xmap_com_phocagallery {
 		$xmap->changeLevel(-1);
 	}
 	
-	private static function getImages(&$xmap, &$parent, &$params, $catid) {
+	private static function getImages(XmapXmlDisplayer &$xmap, stdClass &$parent, array &$params, $catid) {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
