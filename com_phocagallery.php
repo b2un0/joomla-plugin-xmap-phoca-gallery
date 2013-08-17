@@ -60,15 +60,7 @@ final class xmap_com_phocagallery {
 		$params['image_priority'] = $priority;
 		$params['image_changefreq'] = $changefreq;
 		
-		switch($uri->getVar('view')) {
-			case 'categories':
-				self::getCategoryTree($xmap, $parent, $params, 0);
-			break;
-			
-			case 'category':
-				self::getImages($xmap, $parent, $params, $uri->getVar('id'));
-			break;
-		}
+		self::getCategoryTree($xmap, $parent, $params, $uri->getVar('id', 0));
 	}
 	
 	private static function getCategoryTree(XmapDisplayer &$xmap, stdClass &$parent, array &$params, $parent_id) {
