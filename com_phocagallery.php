@@ -60,6 +60,8 @@ final class xmap_com_phocagallery {
 		$params['image_priority'] = $priority;
 		$params['image_changefreq'] = $changefreq;
 		
+		$params['language_filter'] = JFactory::getApplication()->getLanguageFilter();
+		
 		self::getCategoryTree($xmap, $parent, $params, $uri->getVar('id', 0));
 	}
 	
@@ -67,14 +69,18 @@ final class xmap_com_phocagallery {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-				->select(array('id', 'title', 'parent_id'))
-				->from('#__phocagallery_categories')
-				->where('parent_id = ' . $db->quote($parent_id))
-				->where('published = 1')
-				->order('ordering');
+				->select(array('c.id', 'c.title', 'c.parent_id'))
+				->from('#__phocagallery_categories AS c')
+				->where('c.parent_id = ' . $db->quote($parent_id))
+				->where('c.published = 1')
+				->order('c.ordering');
 		
 		if (!$params['show_unauth']) {
-			$query->where('access IN(' . $params['groups'] . ')');
+			$query->where('c.access IN(' . $params['groups'] . ')');
+		}
+		
+		if($params['language_filter']) {
+		    $query->where('c.language IN(' . $db->quote(JFactory::getLanguage()->getTag()) . ', ' . $db->quote('*') . ')');
 		}
 		
 		$db->setQuery($query);
@@ -112,11 +118,15 @@ final class xmap_com_phocagallery {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-				->select(array('id', 'title'))
-				->from('#__phocagallery')
-				->where('catid = ' . $db->Quote($catid))
-				->where('published = 1')
-				->order('ordering');
+				->select(array('g.id', 'g.title'))
+				->from('#__phocagallery AS g')
+				->where('g.catid = ' . $db->Quote($catid))
+				->where('g.published = 1')
+				->order('g.ordering');
+		
+		if($params['language_filter']) {
+		    $query->where('g.language IN(' . $db->quote(JFactory::getLanguage()->getTag()) . ', ' . $db->quote('*') . ')');
+		}
 		
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
