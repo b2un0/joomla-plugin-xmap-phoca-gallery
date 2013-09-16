@@ -69,7 +69,7 @@ final class xmap_com_phocagallery {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-				->select(array('c.id', 'c.title', 'c.parent_id'))
+				->select(array('c.id', 'c.alias', 'c.title', 'c.parent_id'))
 				->from('#__phocagallery_categories AS c')
 				->where('c.parent_id = ' . $db->quote($parent_id))
 				->where('c.published = 1')
@@ -101,12 +101,12 @@ final class xmap_com_phocagallery {
 			$node->priority = $params['category_priority'];
 			$node->changefreq = $params['category_changefreq'];
 			$node->pid = $row->parent_id;
-			$node->link = PhocaGalleryRoute::getCategoryRoute($row->id);
+			$node->link = PhocaGalleryRoute::getCategoryRoute($row->id, $row->alias);
 			
 			if ($xmap->printNode($node) !== false) {
 				self::getCategoryTree($xmap, $parent, $params, $row->id);
 				if ($params['include_images']) {
-					self::getImages($xmap, $parent, $params, $row->id);
+					self::getImages($xmap, $parent, $params, $row->id, $row->alias);
 				}
 			}
 		}
@@ -114,11 +114,11 @@ final class xmap_com_phocagallery {
 		$xmap->changeLevel(-1);
 	}
 	
-	private static function getImages(XmapDisplayer &$xmap, stdClass &$parent, array &$params, $catid) {
+	private static function getImages(XmapDisplayer &$xmap, stdClass &$parent, array &$params, $catid, $catAlias) {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-				->select(array('g.id', 'g.title'))
+				->select(array('g.id', 'g.alias', 'g.title'))
 				->from('#__phocagallery AS g')
 				->where('g.catid = ' . $db->Quote($catid))
 				->where('g.published = 1')
@@ -145,7 +145,7 @@ final class xmap_com_phocagallery {
 			$node->browserNav = $parent->browserNav;
 			$node->priority = $params['image_priority'];
 			$node->changefreq = $params['image_changefreq'];
-			$node->link = PhocaGalleryRoute::getImageRoute($row->id, $catid);
+			$node->link = PhocaGalleryRoute::getImageRoute($row->id, $catid, $row->alias, $catAlias);
 			
 			$xmap->printNode($node);
 		}
