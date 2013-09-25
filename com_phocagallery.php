@@ -9,59 +9,59 @@
  
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_phocagallery/libraries/phocagallery/path/route.php';
-
 final class xmap_com_phocagallery {
 	
 	private static $views = array('categories', 'category');
 	
+	private static $enabled = false;
+	
+	public function __construct() {
+		self::$enabled = JComponentHelper::isEnabled('com_phocagallery');
+		
+		if(self::$enabled) {
+			require_once JPATH_ADMINISTRATOR . '/components/com_phocagallery/libraries/phocagallery/path/route.php';
+		}
+	}
+	
 	public static function getTree(XmapDisplayer &$xmap, stdClass &$parent, array &$params) {
 		$uri = new JUri($parent->link);
 		
-		if(!in_array($uri->getVar('view'), self::$views)) {
+		if(!self::$enabled || !in_array($uri->getVar('view'), self::$views)) {
 			return;
 		}
-		
-		$include_images = JArrayHelper::getValue($params, 'include_images');
-		$include_images = ($include_images == 1 || ($include_images == 2 && $xmap->view == 'xml') || ($include_images == 3 && $xmap->view == 'html'));
-		$params['include_images'] = $include_images;
-		
-		$show_unauth = JArrayHelper::getValue($params, 'show_unauth');
-		$show_unauth = ($show_unauth == 1 || ( $show_unauth == 2 && $xmap->view == 'xml') || ( $show_unauth == 3 && $xmap->view == 'html'));
-		$params['show_unauth'] = $show_unauth;
-		
+
 		$params['groups'] = implode(',', JFactory::getUser()->getAuthorisedViewLevels());
-		
-		$priority = JArrayHelper::getValue($params, 'category_priority', $parent->priority);
-		$changefreq = JArrayHelper::getValue($params, 'category_changefreq', $parent->changefreq);
-		
-		if($priority == -1) {
-			$priority = $parent->priority;
-		}
-		
-		if($changefreq == -1) {
-			$changefreq = $parent->changefreq;
-		}
-		
-		$params['category_priority'] = $priority;
-		$params['category_changefreq'] = $changefreq;
-		
-		$priority = JArrayHelper::getValue($params, 'image_priority', $parent->priority);
-		$changefreq = JArrayHelper::getValue($params, 'image_changefreq', $parent->changefreq);
-		
-		if($priority == -1) {
-			$priority = $parent->priority;
-		}
-		
-		if($changefreq == -1) {
-			$changefreq = $parent->changefreq;
-		}
-		
-		$params['image_priority'] = $priority;
-		$params['image_changefreq'] = $changefreq;
-		
+
 		$params['language_filter'] = JFactory::getApplication()->getLanguageFilter();
 		
+		$params['include_images'] = JArrayHelper::getValue($params, 'include_images', 1);
+		$params['include_images'] = ($params['include_images'] == 1 || ($params['include_images'] == 2 && $xmap->view == 'xml') || ($params['include_images'] == 3 && $xmap->view == 'html'));
+		
+		$params['show_unauth'] = JArrayHelper::getValue($params, 'show_unauth', 0);
+		$params['show_unauth'] = ($params['show_unauth'] == 1 || ( $params['show_unauth'] == 2 && $xmap->view == 'xml') || ( $params['show_unauth'] == 3 && $xmap->view == 'html'));
+		
+		$params['category_priority'] = JArrayHelper::getValue($params, 'category_priority', $parent->priority);
+		$params['category_changefreq'] = JArrayHelper::getValue($params, 'category_changefreq', $parent->changefreq);
+		
+		if($params['category_priority'] == -1) {
+			$params['category_priority'] = $parent->priority;
+		}
+		
+		if($params['category_changefreq'] == -1) {
+			$params['category_changefreq'] = $parent->changefreq;
+		}
+		
+		$params['image_priority'] = JArrayHelper::getValue($params, 'image_priority', $parent->priority);
+		$params['image_changefreq'] = JArrayHelper::getValue($params, 'image_changefreq', $parent->changefreq);
+		
+		if($params['image_priority'] == -1) {
+			$params['image_priority'] = $parent->priority;
+		}
+		
+		if($params['image_changefreq'] == -1) {
+			$params['image_changefreq'] = $parent->changefreq;
+		}
+	
 		self::getCategoryTree($xmap, $parent, $params, $uri->getVar('id', 0));
 	}
 	
