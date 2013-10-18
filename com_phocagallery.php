@@ -34,6 +34,8 @@ final class xmap_com_phocagallery {
 
 		$params['language_filter'] = JFactory::getApplication()->getLanguageFilter();
 		
+		$params['enable_imagemap'] = JArrayHelper::getValue($params, 'enable_imagemap', 0);
+		
 		$params['include_images'] = JArrayHelper::getValue($params, 'include_images', 1);
 		$params['include_images'] = ($params['include_images'] == 1 || ($params['include_images'] == 2 && $xmap->view == 'xml') || ($params['include_images'] == 3 && $xmap->view == 'html'));
 		
@@ -118,7 +120,7 @@ final class xmap_com_phocagallery {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-				->select(array('g.id', 'g.alias', 'g.title'))
+				->select(array('g.id', 'g.alias', 'g.title', 'g.filename'))
 				->from('#__phocagallery AS g')
 				->where('g.catid = ' . $db->Quote($catid))
 				->where('g.published = 1')
@@ -146,6 +148,13 @@ final class xmap_com_phocagallery {
 			$node->priority = $params['image_priority'];
 			$node->changefreq = $params['image_changefreq'];
 			$node->link = PhocaGalleryRoute::getImageRoute($row->id, $catid, $row->alias, $catAlias);
+			
+			if($params['enable_imagemap']) {
+    			$node->isImages = 1;
+    			$node->images[0] = new stdClass;
+    			$node->images[0]->src = JUri::root() . 'images/phocagallery/' . $row->filename;
+    			$node->images[0]->title = $row->title;
+			}
 			
 			$xmap->printNode($node);
 		}

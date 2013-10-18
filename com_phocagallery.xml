@@ -79,6 +79,10 @@
 					<option value="yearly">XMAP_OPTION_YEARLY</option>
 					<option value="never">XMAP_OPTION_NEVER</option>
 				</field>
+				<field name="enable_imagemap" type="radio" class="btn-group" default="0" label="XMAP_SETTING_ENABLE_IMAGEMAP_LABEL" description="XMAP_SETTING_ENABLE_IMAGEMAP_DESC">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
 			</fieldset>
 		</fields>
 	</config>
