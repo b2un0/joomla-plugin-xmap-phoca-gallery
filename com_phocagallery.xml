@@ -15,8 +15,8 @@
     <updateservers>
         <server type="collection" priority="1" name="z-index development">http://www.z-index.net/en/extensions.xml</server>
     </updateservers>
-    <languages folder="lang">
-        <language tag="en-GB">en-GB.plg_xmap_com_phocagallery.ini</language>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/en-GB.plg_xmap_com_phocagallery.ini</language>
     </languages>
     <config>
         <fields name="params">
@@ -84,6 +84,12 @@
                 <field name="enable_imagemap" type="radio" class="btn-group" default="0" label="XMAP_SETTING_ENABLE_IMAGEMAP_LABEL" description="XMAP_SETTING_ENABLE_IMAGEMAP_DESC">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
+                </field>
+                <field name="image_type" type="list" default="original" label="XMAP_SETTING_IMAGE_TYPE_LABEL" description="XMAP_SETTING_IMAGE_TYPE_DESC">
+                    <option value="thumb_s">XMAP_SETTING_IMAGE_TYPE_OPTION_THUMB_S</option>
+                    <option value="thumb_m">XMAP_SETTING_IMAGE_TYPE_OPTION_THUMB_M</option>
+                    <option value="thumb_l">XMAP_SETTING_IMAGE_TYPE_OPTION_THUMB_L</option>
+                    <option value="original">XMAP_SETTING_IMAGE_TYPE_OPTION_ORIGINAL</option>
                 </field>
             </fieldset>
         </fields>

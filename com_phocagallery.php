@@ -3,7 +3,7 @@
 /**
  * @author     Branko Wilhelm <branko.wilhelm@gmail.com>
  * @link       http://www.z-index.net
- * @copyright  (c) 2013 Branko Wilhelm
+ * @copyright  (c) 2013 - 2014 Branko Wilhelm
  * @license    GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
@@ -19,9 +19,7 @@ final class xmap_com_phocagallery
     {
         self::$enabled = JComponentHelper::isEnabled('com_phocagallery');
 
-        if (self::$enabled) {
-            require_once JPATH_ADMINISTRATOR . '/components/com_phocagallery/libraries/phocagallery/path/route.php';
-        }
+        JLoader::register('PhocaGalleryRoute', JPATH_ADMINISTRATOR . '/components/com_phocagallery/libraries/phocagallery/path/route.php');
     }
 
     public static function getTree(XmapDisplayer &$xmap, stdClass &$parent, array &$params)
@@ -37,6 +35,8 @@ final class xmap_com_phocagallery
         $params['language_filter'] = JFactory::getApplication()->getLanguageFilter();
 
         $params['enable_imagemap'] = JArrayHelper::getValue($params, 'enable_imagemap', 0);
+
+        $params['image_type'] = JArrayHelper::getValue($params, 'image_type', 'original');
 
         $params['include_images'] = JArrayHelper::getValue($params, 'include_images', 1);
         $params['include_images'] = ($params['include_images'] == 1 || ($params['include_images'] == 2 && $xmap->view == 'xml') || ($params['include_images'] == 3 && $xmap->view == 'html'));
@@ -143,6 +143,8 @@ final class xmap_com_phocagallery
 
         $xmap->changeLevel(1);
 
+        $root = JUri::root() . 'images/phocagallery/';
+
         foreach ($rows as $row) {
             $node = new stdclass;
             $node->id = $parent->id;
@@ -156,7 +158,7 @@ final class xmap_com_phocagallery
             if ($params['enable_imagemap']) {
                 $node->isImages = 1;
                 $node->images[0] = new stdClass;
-                $node->images[0]->src = JUri::root() . 'images/phocagallery/' . $row->filename;
+                $node->images[0]->src = $root . self::setImageSrc($row->filename, $params);
                 $node->images[0]->title = $row->title;
             }
 
@@ -164,5 +166,34 @@ final class xmap_com_phocagallery
         }
 
         $xmap->changeLevel(-1);
+    }
+
+    private static function setImageSrc($filename, array &$params)
+    {
+        $path = '';
+        if (strpos($filename, '/') !== false) {
+            $path = explode('/', $filename);
+            $filename = array_pop($path);
+            $path = implode('/', $path) . '/';
+        }
+
+        switch ($params['image_type']) {
+            case'thumb_s':
+                $path .= 'thumbs/phoca_thumb_s_' . $filename;
+                break;
+
+            case'thumb_m':
+                $path .= 'thumbs/phoca_thumb_m_' . $filename;
+                break;
+
+            case'thumb_l':
+                $path .= 'thumbs/phoca_thumb_l_' . $filename;
+                break;
+            default:
+                $path .= $filename;
+                break;
+        }
+
+        return $path;
     }
 }
