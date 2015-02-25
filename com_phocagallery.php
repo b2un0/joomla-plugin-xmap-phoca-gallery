@@ -3,16 +3,16 @@
 /**
  * @author     Branko Wilhelm <branko.wilhelm@gmail.com>
  * @link       http://www.z-index.net
- * @copyright  (c) 2013 - 2014 Branko Wilhelm
+ * @copyright  (c) 2013 - 2015 Branko Wilhelm
  * @license    GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
 defined('_JEXEC') or die;
 
-final class xmap_com_phocagallery
+class xmap_com_phocagallery
 {
-
     private static $views = array('categories', 'category');
+
     private static $enabled = false;
 
     public function __construct()
