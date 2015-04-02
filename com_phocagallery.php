@@ -11,8 +11,14 @@ defined('_JEXEC') or die;
 
 class xmap_com_phocagallery
 {
+    /**
+     * @var array
+     */
     private static $views = array('categories', 'category');
 
+    /**
+     * @var bool
+     */
     private static $enabled = false;
 
     public function __construct()
@@ -22,7 +28,14 @@ class xmap_com_phocagallery
         JLoader::register('PhocaGalleryRoute', JPATH_ADMINISTRATOR . '/components/com_phocagallery/libraries/phocagallery/path/route.php');
     }
 
-    public static function getTree(XmapDisplayer &$xmap, stdClass &$parent, array &$params)
+    /**
+     * @param XmapDisplayerInterface $xmap
+     * @param stdClass $parent
+     * @param array $params
+     *
+     * @throws Exception
+     */
+    public static function getTree($xmap, stdClass $parent, array &$params)
     {
         $uri = new JUri($parent->link);
 
@@ -69,7 +82,13 @@ class xmap_com_phocagallery
         self::getCategoryTree($xmap, $parent, $params, $uri->getVar('id', 0));
     }
 
-    private static function getCategoryTree(XmapDisplayer &$xmap, stdClass &$parent, array &$params, $parent_id)
+    /**
+     * @param XmapDisplayerInterface $xmap
+     * @param stdClass $parent
+     * @param array $params
+     * @param int $parent_id
+     */
+    private static function getCategoryTree($xmap, stdClass $parent, array &$params, $parent_id)
     {
         $db = JFactory::getDbo();
 
@@ -119,7 +138,14 @@ class xmap_com_phocagallery
         $xmap->changeLevel(-1);
     }
 
-    private static function getImages(XmapDisplayer &$xmap, stdClass &$parent, array &$params, $catid, $catAlias)
+    /**
+     * @param XmapDisplayerInterface $xmap
+     * @param stdClass $parent
+     * @param array $params
+     * @param int $catid
+     * @param string $catAlias
+     */
+    private static function getImages($xmap, stdClass $parent, array &$params, $catid, $catAlias)
     {
         $db = JFactory::getDbo();
 
@@ -157,6 +183,7 @@ class xmap_com_phocagallery
 
             if ($params['enable_imagemap']) {
                 $node->isImages = 1;
+                // $node->images can be a array with more than one image
                 $node->images[0] = new stdClass;
                 $node->images[0]->src = $root . self::setImageSrc($row->filename, $params);
                 $node->images[0]->title = $row->title;
